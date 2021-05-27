@@ -31,8 +31,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Cache node_modules
         uses: actions/cache@v2
@@ -42,7 +42,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run formatter
-        run: npx next build
+        run: npx prettier -c .
 
   lint:
     needs: install
@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Cache node_modules
         uses: actions/cache@v2
@@ -61,7 +61,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run linter
-        run: npx next build
+        run: npx eslint .
 
   type-check:
     needs: install
@@ -69,8 +69,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Cache node_modules
         uses: actions/cache@v2
@@ -87,8 +87,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Cache node_modules
         uses: actions/cache@v2
