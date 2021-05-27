@@ -80,7 +80,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run typechecker
-        run: npx next build
+        run: npx mongod
   test:
     needs: install
 
@@ -98,4 +98,4 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run tests
-        run: npx next build
+        run: mongod
