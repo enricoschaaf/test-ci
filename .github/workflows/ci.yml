@@ -43,9 +43,9 @@ jobs:
 
       - name: Run formatter
         id: format
-        run: npx prettier -w .
-
-      - run: echo  ${{ steps.format.outputs.changes_detected }}
+        run: |
+          npx prettier -w .
+          echo "::set-output name=changes_detected::$(if [ -n "$(git status -s)" ]; then echo "true"; else echo "false"; fi)"
 
       - name: Commit changes
         if: steps.format.outputs.changes_detected == true
