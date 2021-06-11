@@ -47,14 +47,11 @@ jobs:
           npx prettier -w .
           echo "::set-output name=changes_detected::$(if [ -n "$(git status -s)" ]; then echo true; else echo false; fi)"
 
-      - run: echo ${GITHUB_REF}
-
       - name: Commit changes
         if: steps.format.outputs.changes_detected == 'true'
         run: |
           git add .
-          git checkout ${GITHUB_REF##*/}
           git config user.email "bot@green-got.com"
           git config user.name "Green Got Bot"
           git commit -m "style(format): apply prettier changes"
-          git push origin HEAD:${GITHUB_REF##*/} -f
+          git push origin
