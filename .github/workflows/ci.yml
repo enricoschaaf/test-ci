@@ -45,7 +45,7 @@ jobs:
         id: format
         run: npx prettier -w .
 
-      - run: echo  ${{ github.payload.pull_request.head.ref }}
+      - run: echo  ${{ steps.format.outputs.changes_detected }}
 
       - name: Commit changes
         if: steps.format.outputs.changes_detected == true
