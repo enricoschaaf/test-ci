@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
     branches:
-      - "main"
+      - main
   workflow_dispatch:
 
 jobs:
@@ -57,4 +57,4 @@ jobs:
           git config user.email "bot@green-got.com"
           git config user.name "Green Got Bot"
           git commit -m "style(format): apply prettier changes"
-          git push origin ${{ github.head_ref }}
+          git push
