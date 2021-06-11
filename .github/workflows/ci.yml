@@ -43,10 +43,10 @@ jobs:
 
       - name: Run formatter
         run: npx prettier -w .
-      - name: Add files
-        run: git add .
-      - name: Amend commit
+      - name: Commit changes
         run: |
+          git add .
           git config user.email "bot@green-got.com"
           git config user.name "Green Got Bot"
           git commit --amend --no-edit
+          git push -f
