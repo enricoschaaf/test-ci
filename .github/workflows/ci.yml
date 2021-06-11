@@ -46,4 +46,7 @@ jobs:
       - name: Add files
         run: git add .
       - name: Amend commit
-        run: git commit --amend
+        run: |
+          git config user.email "bot@green-got.com"
+          git config user.name "Green Got Bot"
+          git commit --amend
