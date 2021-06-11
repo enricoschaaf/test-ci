@@ -49,4 +49,4 @@ jobs:
         run: |
           git config user.email "bot@green-got.com"
           git config user.name "Green Got Bot"
-          git commit --amend
+          git commit --amend --no-edit
