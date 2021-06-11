@@ -49,4 +49,4 @@ jobs:
           git config user.email "bot@green-got.com"
           git config user.name "Green Got Bot"
           git commit --amend --no-edit
-          git push origin HEAD:${GITHUB_REF##*/} -f
+          git push origin HEAD:${GITHUB_REF} -f
