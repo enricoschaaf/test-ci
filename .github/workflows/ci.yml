@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
     branches:
-      - 'main'
+      - "main"
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
         uses: actions/cache@v2
         id: cache
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v2
         id: cache
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run formatter
@@ -49,4 +49,4 @@ jobs:
           git config user.email "bot@green-got.com"
           git config user.name "Green Got Bot"
           git commit --amend --no-edit
-          git push -f
+          git push origin HEAD:${GITHUB_REF##*/} -f
