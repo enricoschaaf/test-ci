@@ -7,3 +7,5 @@ jobs:
     steps:
     - name: Install Wireguard
       run: sudo apt-get install wireguard
+    - name: Start Wireguard
+      run: wg-quick up wg0
