@@ -9,10 +9,10 @@ jobs:
       run: sudo apt-get install wireguard
     - name: Create WireGuard config
       run: |
-        sed -i -e "s@{{WIREGUARD_PRIVATE_KEY}}@${{ secrets.WIREGUARD_PRIVATE_KEY }}@" $GITHUB_WORKSPACE/tunnel.conf
-        sed -i -e "s@{{WIREGUARD_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_SERVER_PUBLIC_KEY }}@" $GITHUB_WORKSPACE/tunnel.conf
-        sed -i -e "s@{{WIREGUARD_SERVER_ENDPOINT}}@${{ secrets.WIREGUARD_SERVER_ENDPOINT }}@" $GITHUB_WORKSPACE/tunnel.conf
-        sudo cp $GITHUB_WORKSPACE/tunnel.conf /etc/wireguard/
+        sed -i -e "s@{{WIREGUARD_PRIVATE_KEY}}@${{ secrets.WIREGUARD_PRIVATE_KEY }}@" /github/workspace/tunnel.conf
+        sed -i -e "s@{{WIREGUARD_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_SERVER_PUBLIC_KEY }}@" /github/workspace/tunnel.conf
+        sed -i -e "s@{{WIREGUARD_SERVER_ENDPOINT}}@${{ secrets.WIREGUARD_SERVER_ENDPOINT }}@" /github/workspace/tunnel.conf
+        sudo cp /github/workspace/tunnel.conf /etc/wireguard/
     - name: Start Wireguard
       run: wg-quick up tunnel
     - name: Stop Wireguard
