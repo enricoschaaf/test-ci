@@ -15,6 +15,8 @@ jobs:
         sed -i -e "s@{{WIREGUARD_SERVER_PUBLIC_KEY}}@${{ secrets.WIREGUARD_SERVER_PUBLIC_KEY }}@" wg0.conf
         sed -i -e "s@{{WIREGUARD_SERVER_ENDPOINT}}@${{ secrets.WIREGUARD_SERVER_ENDPOINT }}@" wg0.conf
         sudo cp wg0.conf /etc/wireguard/
+    - name: Create resolvconf symlink
+      run: ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
     - name: Start Wireguard
       run: wg-quick up wg0
     - name: Stop Wireguard
