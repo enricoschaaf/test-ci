@@ -15,3 +15,6 @@ jobs:
         sudo cp $GITHUB_WORKSPACE/tunnel.conf /etc/wireguard/
     - name: Start Wireguard
       run: wg-quick up tunnel
+    - name: Stop Wireguard
+      run: wg-quick down tunnel
+
