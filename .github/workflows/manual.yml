@@ -6,4 +6,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install Wireguard
-      run: apt-get install wireguard
+      run: sudo apt-get install wireguard
