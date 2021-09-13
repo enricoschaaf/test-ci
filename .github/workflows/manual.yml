@@ -7,5 +7,9 @@ jobs:
     steps:
     - name: Install Wireguard
       run: sudo apt-get install wireguard
+    - name: Copy WireGuard config
+      run: echo "$WIREGUARD_CONFIG" > /etc/wireguard/wg0.conf
+      env:
+        WIREGUARD_CONFIG: ${{secrets.WIREGUARD_CONFIG}}
     - name: Start Wireguard
       run: wg-quick up wg0
