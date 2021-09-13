@@ -8,7 +8,7 @@ jobs:
     - name: Install Wireguard
       run: sudo apt-get install wireguard
     - name: Install Wireguard
-      run: ls /github/workspace
+      run: ls /
     - name: Create WireGuard config
       run: |
         sed -i -e "s@{{WIREGUARD_PRIVATE_KEY}}@${{ secrets.WIREGUARD_PRIVATE_KEY }}@" /github/workspace/wg0.conf
