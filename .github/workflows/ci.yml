@@ -1,60 +1,59 @@
-name: CI
+name: Continuous Delivery
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - deployment
   workflow_dispatch:
 
 jobs:
   install:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit == false
-        run: yarn install --frozen-lockfile
-
-  format:
-    needs: install
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        id: cache
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-
-      - name: Run formatter
-        id: format
-        run: |
-          npx prettier -w .
-          echo "::set-output name=changes_detected::$(if [ -n "$(git status -s)" ]; then echo true; else echo false; fi)"
-
-      - name: Commit changes
-        if: steps.format.outputs.changes_detected == 'true'
-        run: |
-          git add .
-          git checkout ${{ github.head_ref }}
-          git config user.email "bot@green-got.com"
-          git config user.name "Green Got Bot"
-          git commit -m "style(format): apply prettier changes"
-          git push
+    uses: green-got/green-got-mono-repo/.github/workflows/install.yml@main
+  cdk:
+    needs: [format, lint, type-check, test]
+    uses: green-got/green-got-mono-repo/.github/workflows/cdk.yml@main
+    with:
+      env: prod
+    secrets:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.STAGING_AWS_ACCOUNT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+  assets:
+    needs: [format, lint, type-check, test]
+    uses: green-got/green-got-mono-repo/.github/workflows/pulumi.yml@main
+    with:
+      stack: green-got/assets/prod
+      workspace: assets
+    secrets:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+  analytics:
+    needs: [format, lint, type-check, test]
+    uses: green-got/green-got-mono-repo/.github/workflows/pulumi.yml@staging
+    with:
+      stack: green-got/analytics/prod
+      workspace: analytics
+    secrets:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+  webhooks:
+    needs: [format, lint, type-check, test]
+    uses: green-got/green-got-mono-repo/.github/workflows/pulumi.yml@staging
+    with:
+      stack: green-got/web-hooks/prod
+      workspace: webhooks
+    secrets:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+  ensure-indexes:
+    needs: [format, lint, type-check, test]
+    uses: green-got/green-got-mono-repo/.github/workflows/ensure-indexes.yml@main
+    secrets:
+      MONGO_URI: ${{ secrets.STAGING_MONGO_URI }}
