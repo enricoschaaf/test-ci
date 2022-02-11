@@ -12,3 +12,4 @@ jobs:
     - run: |
         mongod --version
         mongo --version
+        which mongo
